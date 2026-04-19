@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="preload" as="image" href="wedding_imgs/Line-art-Ganesha.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ami ❤️ Ansh — Wedding Invitation</title>
@@ -36,12 +37,20 @@ body{font-family:'Jost',sans-serif;background:var(--ivory);color:#4a3728;overflo
 }
 
 /* ── Stage 1: Ganesha ──────────────────────────────── */
-#stage-ganesh{
-  background:linear-gradient(135deg,#3a1828 0%,#5a2040 50%,#3a1828 100%);
-  animation:stageShow 4.5s ease forwards;
+#stage-ganesh {
+  background: linear-gradient(135deg,#3a1828 0%,#5a2040 50%,#3a1828 100%);
+  animation: stageShow 4.5s ease forwards;
+  position: absolute; /* Keep it layered */
+  width: 100%;
+  top: 0;
 }
-@keyframes stageShow{
-  0%{opacity:0}8%{opacity:1}80%{opacity:1}100%{opacity:0}
+
+@keyframes stageShow {
+  0% { opacity: 0; visibility: visible; }
+  8% { opacity: 1; }
+  80% { opacity: 1; }
+  99% { opacity: 0; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; } /* Fully gone */
 }
 
 .ganesh-om{
@@ -57,10 +66,13 @@ body{font-family:'Jost',sans-serif;background:var(--ivory);color:#4a3728;overflo
 }
 
 /* Ganesha SVG illustration */
-.ganesh-svg{
-  width:min(220px,40vw);height:auto;margin:0 auto;
-  animation:ganeshArise 4.5s ease forwards;
-  filter:drop-shadow(0 0 30px rgba(255,153,51,.4));
+.ganesh-svg {
+  width: min(220px, 40vw);
+  aspect-ratio: 1 / 1; /* Adjust if your PNG is a rectangle (e.g., 4/5) */
+  height: auto;
+  display: block; /* Ensures margins work correctly */
+  margin: 0 auto;
+  /* ... existing animation/filter code ... */
 }
 @keyframes ganeshArise{
   0%{opacity:0;transform:scale(.85)}
@@ -79,19 +91,47 @@ body{font-family:'Jost',sans-serif;background:var(--ivory);color:#4a3728;overflo
 }
 
 /* ── Stage 2: Radha Krishna ────────────────────────── */
-#stage-krishna{
-  background:linear-gradient(135deg,#3a1828 0%,#5a2040 50%,#3a1828 100%);
-  animation:stageShow2 3.5s 4.2s ease forwards;
-}
-@keyframes stageShow2{
-  0%{opacity:0}10%{opacity:1}80%{opacity:1}100%{opacity:0}
+#stage-krishna {
+  background: linear-gradient(135deg,#3a1828 0%,#5a2040 50%,#3a1828 100%);
+  opacity: 0; /* Start hidden */
+  animation: stageShow2 3.5s 4.5s ease forwards; /* Shift start to 4.5s to avoid overlap */
 }
 
-.rk-symbol{
-  width:min(200px,38vw);height:auto;margin:0 auto;
-  animation:rkArise 3.5s 4.2s ease forwards;
-  filter:drop-shadow(0 0 25px rgba(100,160,255,.35));
+@keyframes stageShow2 {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
 }
+
+The jitter and the overlapping animations are happening because of how the browser handles image loading and the timing of your opacity animations.
+
+Here is the breakdown of how to fix both:
+
+1. Fix the "Jitter" (Layout Shift)
+Since you are using height: auto in your CSS, the browser doesn't know the height of the image until it downloads. To fix this, you should set a fixed aspect ratio in your CSS. This forces the browser to reserve the exact space before the image arrives.
+
+Update your CSS for both images:
+
+CSS
+.ganesh-svg {
+  width: min(220px, 40vw);
+  aspect-ratio: 1 / 1; /* Adjust if your PNG is a rectangle (e.g., 4/5) */
+  height: auto;
+  display: block; /* Ensures margins work correctly */
+  margin: 0 auto;
+  /* ... existing animation/filter code ... */
+}
+
+.rk-symbol {
+  width: min(200px, 38vw);
+  aspect-ratio: 1 / 1; /* Adjust to match your krishna.png shape */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  /* ... existing animation/filter code ... */
+}
+
 @keyframes rkArise{
   0%{opacity:0;transform:scale(.88) translateY(10px)}
   100%{opacity:1;transform:scale(1) translateY(0)}
