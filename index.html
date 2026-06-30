@@ -682,8 +682,9 @@ section{position:relative;padding:6rem 1.5rem;overflow:hidden;contain:layout sty
   object-fit:cover;object-position:center top;display:block;
   opacity:0;transition:opacity .55s ease,transform .6s ease;z-index:2;
 }
+#saatak-thumb img{object-position:center 65%; transform:scale(1.00);}
 .tl-thumb.img-loaded img{opacity:1}
-.tl-card:hover .tl-thumb img{transform:scale(1.04)}
+.tl-card:hover .tl-thumb img{transform:scale(1.03)}
 .tl-thumb-ov{position:absolute;inset:0;z-index:3;background:linear-gradient(to bottom,transparent 50%,rgba(253,246,238,.35) 100%)}
 
 .tl-body{padding:1.6rem 1.8rem 1.8rem;display:flex;flex-direction:column;gap:.5rem}
@@ -752,7 +753,9 @@ section{position:relative;padding:6rem 1.5rem;overflow:hidden;contain:layout sty
 .fta{resize:vertical;min-height:100px;line-height:1.6}
 .rg{display:flex;gap:1rem;flex-wrap:wrap}
 .rl{display:flex;align-items:center;gap:.45rem;cursor:pointer;color:rgba(255,220,210,.85);font-size:.85rem}
+.rl.disabled{opacity:.45}
 .rl input{accent-color:var(--gold);width:16px;height:16px;cursor:pointer}
+.rl input:disabled{cursor:not-allowed}
 .rsub{width:100%;padding:1rem;border-radius:50px;border:none;cursor:pointer;background:linear-gradient(135deg,#c9775a,#b5627a,#8e4a7a);color:#fff;font-family:'Jost',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;transition:all .4s;box-shadow:0 6px 28px rgba(181,98,122,.38);margin-top:.8rem;min-height:48px;display:flex;align-items:center;justify-content:center}
 .rsub:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(181,98,122,.55)}
 .rsub:disabled{opacity:.55;cursor:not-allowed;transform:none}
@@ -940,7 +943,7 @@ footer span{color:var(--gold)}
         <div class="fam-name">Ami Patel</div>
         <div style="font-size:.75rem;color:#8a6070;margin-top:.6rem;line-height:1.6">
           <div style="margin-bottom:.4rem"><strong>D/O:</strong> Late Navinchandra Patel &amp; Hemlataben Patel</div>
-          <div><strong>GD/O:</strong> Late Shri Dayabhai &amp; Late Smt. Deviben Patel</div>
+          <div><strong>GD/O:</strong> Late Shri Dahyabhai &amp; Late Smt. Deviben Patel</div>
         </div>
         <div class="fam-desc" style="margin-top:.8rem">Surat, Gujarat</div>
       </div>
@@ -1088,6 +1091,25 @@ footer span{color:var(--gold)}
         </div>
       </div>
     </div>
+
+    <div class="tl-item reveal rd3">
+      <div class="tl-dot" style="background:var(--rose)"></div>
+      <div class="tl-card">
+        <div class="tl-thumb" id="saatak-thumb">
+          <img src="wedding_imgs/saatak.PNG" alt="Saatak Puja" loading="lazy" decoding="async">
+          <div class="tl-thumb-ov"></div>
+        </div>
+        <div class="tl-body">
+          <span class="tl-icon">🪔</span>
+          <div class="tl-name">Saatak Puja</div>
+          <div class="tl-date">25 November 2026</div>
+          <div class="tl-time">Morning · Vedic Chants &amp; Traditional Feast</div>
+          <div class="tl-venue">Bansari Resort &amp; Banquet, Surat</div>
+          <span class="tl-pill ps">Blessings · Devotion · Serenity</span>
+        </div>
+      </div>
+    </div>
+
     <div class="tl-item reveal rd2">
       <div class="tl-dot" style="background:var(--lavender)"></div>
       <div class="tl-card">
@@ -1139,7 +1161,7 @@ footer span{color:var(--gold)}
       <form id="rsvp-form" novalidate>
         <div class="fg"><label class="fl" for="fn">Your Full Name *</label><input class="fi" type="text" id="fn" placeholder="e.g. Priya Rastogi/Patel" required></div>
         <div class="fg"><label class="fl">Will you be attending? *</label><div class="rg"><label class="rl"><input type="radio" name="attending" value="Yes — I'll be there! 🎉"> Yes, I'll be there! 🎉</label><label class="rl"><input type="radio" name="attending" value="Unable to attend 😢"> Unable to attend 😢</label></div></div>
-        <div class="fg"><label class="fl">Which event(s) will you attend?</label><div class="rg" style="flex-direction:column;gap:.7rem"><label class="rl"><input type="radio" name="events" value="Haldi · 24 Nov · Morning"> 🌼 Haldi · 24 Nov · Morning</label><label class="rl"><input type="radio" name="events" value="Sangeet · 24 Nov · Evening"> 🎶 Sangeet · 24 Nov · Evening</label><label class="rl"><input type="radio" name="events" value="Wedding · 25 Nov · Night"> 💍 Wedding · 25 Nov · Night</label><label class="rl"><input type="radio" name="events" value="All Events"> 🎊 All Events</label></div></div>
+        <div class="fg"><label class="fl">Which event(s) will you attend?</label><div class="rg" style="flex-direction:column;gap:.7rem"><label class="rl"><input type="checkbox" name="events" value="Haldi · 24 Nov · Morning"> 🌼 Haldi · 24 Nov · Morning</label><label class="rl"><input type="checkbox" name="events" value="Sangeet · 24 Nov · Evening"> 🎶 Sangeet · 24 Nov · Evening</label><label class="rl"><input type="checkbox" name="events" value="Saatak · 25 Nov · Morning"> 🕉️ Saatak · 25 Nov · Morning</label><label class="rl"><input type="checkbox" name="events" value="Wedding · 25 Nov · Night"> 💍 Wedding · 25 Nov · Night</label><label class="rl"><input type="checkbox" id="all-events" name="events" value="All Events"> 🎊 All Events</label></div></div>
         <div class="fg"><label class="fl" for="fg2">Number of People Attending *</label><select class="fsel fi" id="fg2" required><option value="" disabled selected>Select number of people</option><option value="1">Just me — 1 person</option><option value="2">2 people</option><option value="3">3 people</option><option value="4">4 people</option><option value="5">5 people</option><option value="6+">6 or more</option></select></div>
         <div class="fg"><label class="fl" for="fm">A Message for Ami &amp; Ansh 💌</label><textarea class="fta" id="fm" placeholder="Share your love, wishes, or a favourite memory…"></textarea></div>
         <button type="submit" class="rsub" id="rsub">✦ &nbsp;Send My RSVP&nbsp; ✦</button>
@@ -1479,7 +1501,7 @@ function attachImgObserver(thumb, img){
 }
 
 // Timeline cards
-['haldi-thumb','sangeet-thumb','wedding-thumb'].forEach(id => {
+['haldi-thumb','sangeet-thumb','saatak-thumb','wedding-thumb'].forEach(id => {
   const thumb = document.getElementById(id);
   if(thumb){ attachImgObserver(thumb, thumb.querySelector('img')); }
 });
@@ -1535,19 +1557,65 @@ const ro = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
 
 /* ── 9. RSVP ─────────────────────────────────────────── */
+const allEventsToggle = document.getElementById('all-events');
+const eventOptions = Array.from(document.querySelectorAll('input[name="events"]:not(#all-events)'));
+const attendingInputs = Array.from(document.querySelectorAll('input[name="attending"]'));
+const eventLabels = Array.from(document.querySelectorAll('label.rl')).filter(label => label.querySelector('input[name="events"]'));
+
+function syncEventSelection(){
+  const allSelected = eventOptions.length > 0 && eventOptions.every(opt => opt.checked);
+  allEventsToggle.checked = allSelected;
+}
+
+function updateEventAvailability(){
+  const unableToAttend = attendingInputs.some(opt => opt.checked && opt.value === 'Unable to attend 😢');
+  eventOptions.forEach(opt => {
+    opt.disabled = unableToAttend;
+    opt.checked = false;
+  });
+  allEventsToggle.disabled = unableToAttend;
+  allEventsToggle.checked = false;
+  eventLabels.forEach(label => {
+    label.classList.toggle('disabled', unableToAttend);
+  });
+}
+
+eventOptions.forEach(opt => {
+  opt.addEventListener('change', () => {
+    syncEventSelection();
+    if (eventOptions.every(o => o.checked)) {
+      allEventsToggle.checked = true;
+    }
+  });
+});
+
+allEventsToggle.addEventListener('change', function(){
+  const checked = this.checked;
+  eventOptions.forEach(opt => opt.checked = checked);
+  syncEventSelection();
+});
+
+attendingInputs.forEach(opt => {
+  opt.addEventListener('change', updateEventAvailability);
+});
+
+updateEventAvailability();
+
 document.getElementById('rsvp-form').addEventListener('submit', async function(e){
   e.preventDefault();
   const btn = document.getElementById('rsub');
   const name = document.getElementById('fn').value.trim();
   const attending = document.querySelector('input[name="attending"]:checked');
-  const events    = document.querySelector('input[name="events"]:checked');
+  const selectedEvents = Array.from(document.querySelectorAll('input[name="events"]:checked'))
+    .map(opt => opt.value);
   const guests    = document.getElementById('fg2').value;
   const msg       = document.getElementById('fm').value.trim();
   if(!name){ alert('Please enter your name.'); return; }
   if(!attending){ alert('Please let us know if you can attend.'); return; }
   if(!guests){ alert('Please select the number of guests.'); return; }
+  if(selectedEvents.length === 0){ alert('Please select at least one event.'); return; }
   btn.disabled=true; btn.textContent='Sending your love…';
-  const payload = {name, attending:attending.value, events:events?events.value:'Not specified', guests, message:msg};
+  const payload = {name, attending:attending.value, events:selectedEvents.includes('All Events') ? 'All Events' : selectedEvents.join(', '), guests, message:msg};
   try{
     if(GS_URL==="YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"){ await new Promise(r=>setTimeout(r,1200)); }
     else{ await fetch(GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }
