@@ -10,6 +10,7 @@
      imagesrcset not needed for PNG. fetchpriority is the key fix. -->
 <link rel="preload" as="image" href="wedding_imgs/Line-art-Ganesha.png" fetchpriority="high">
 <link rel="preload" as="image" href="wedding_imgs/krishna.png" fetchpriority="high">
+<link rel="preload" as="image" href="wedding_imgs/hawan.PNG" fetchpriority="high">
 <link rel="preload" as="image" href="wedding_imgs/hero.jpg" fetchpriority="low">
 
 <!-- Fonts load AFTER image preloads — never compete for bandwidth -->
@@ -682,6 +683,12 @@ section{position:relative;padding:6rem 1.5rem;overflow:hidden;contain:layout sty
   object-fit:cover;object-position:center top;display:block;
   opacity:0;transition:opacity .55s ease,transform .6s ease;z-index:2;
 }
+#hawan-thumb{background:#fffaf7}
+#hawan-thumb img{
+  object-fit:cover;
+  object-position:center center;
+  transform:scale(1.00);
+}
 #saatak-thumb img{object-position:center 65%; transform:scale(1.00);}
 .tl-thumb.img-loaded img{opacity:1}
 .tl-card:hover .tl-thumb img{transform:scale(1.03)}
@@ -706,8 +713,9 @@ section{position:relative;padding:6rem 1.5rem;overflow:hidden;contain:layout sty
 /* ═══════════════════════════════════════════════════════
    VENUE
 ═══════════════════════════════════════════════════════ */
-#venue{background:linear-gradient(160deg,#fdf0fa 0%,#f8e8f0 50%,#fdf6ee 100%);text-align:center}
-.vmosaic{max-width:720px;margin:2.5rem auto 0;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(100,40,60,.2)}
+#venue{background:linear-gradient(160deg,#fdf0fa 0%,#f8e8f0 50%,#fdf6ee 100%);text-align:center;padding:0 1.5rem 5rem}
+.venues{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem;max-width:1100px;margin:2.5rem auto 0;align-items:start}
+.vmosaic{border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(100,40,60,.2)}
 .vm-main{
   height:340px;overflow:hidden;position:relative;
   background:#e8d5dc;
@@ -729,11 +737,16 @@ section{position:relative;padding:6rem 1.5rem;overflow:hidden;contain:layout sty
 .vm-main:hover img{transform:scale(1.03)}
 .vm-lbl{position:absolute;bottom:0;left:0;right:0;z-index:5;padding:.6rem .9rem;background:linear-gradient(to top,rgba(30,8,20,.72),transparent);color:rgba(255,218,206,.92);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500}
 
-.vcard{max-width:600px;margin:2rem auto 0;background:rgba(255,255,255,.65);backdrop-filter:blur(16px);border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:2rem 2.5rem;box-shadow:0 12px 40px rgba(180,120,140,.12)}
-.vname{font-family:'Italiana',serif;font-size:2.2rem;font-weight:400;color:#6b3a4e;margin-bottom:.5rem}
-.vaddr{font-size:.86rem;color:#9a7080;line-height:1.8;margin-bottom:1.2rem}
-.vbtn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.65rem 1.6rem;border-radius:50px;background:linear-gradient(135deg,var(--gold),#dab965);color:#fff;font-size:.74rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:all .3s;box-shadow:0 4px 20px rgba(201,168,76,.38);min-height:48px}
+.vcard{margin-top:1rem;background:rgba(255,255,255,.65);backdrop-filter:blur(16px);border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:1.6rem 1.8rem;box-shadow:0 12px 40px rgba(180,120,140,.12)}
+.vname{font-family:'Italiana',serif;font-size:1.8rem;font-weight:400;color:#6b3a4e;margin-bottom:.5rem}
+.vaddr{font-size:.84rem;color:#9a7080;line-height:1.7;margin-bottom:1rem}
+.vbtn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.65rem 1.4rem;border-radius:50px;background:linear-gradient(135deg,var(--gold),#dab965);color:#fff;font-size:.74rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:all .3s;box-shadow:0 4px 20px rgba(201,168,76,.38);min-height:48px}
 .vbtn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,168,76,.52)}
+@media(max-width:700px){
+  .venues{grid-template-columns:1fr;gap:1.2rem}
+  .vm-main{height:280px}
+  .vcard{padding:1.3rem 1.2rem}
+}
 
 /* ═══════════════════════════════════════════════════════
    RSVP
@@ -1054,9 +1067,26 @@ footer span{color:var(--gold)}
     <p class="eyebrow reveal">The Celebrations</p>
     <h2 class="stitle reveal rd1">Sacred Moments</h2>
     <span class="ornament reveal rd2">✦ ❀ ✦</span>
-    <p class="reveal rd2" style="color:#9a7080;font-size:.88rem">24 - 25 November 2026 &nbsp;·&nbsp; Bansari Resort, Surat, Gujarat</p>
+    <p class="reveal rd2" style="color:#9a7080;font-size:.88rem; font-style:italic; letter-spacing:.04em;">19<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup>, 24<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> &amp; 25<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> November 2026 &nbsp;·&nbsp; Bansari Resort, Surat, Gujarat</p>
   </div>
   <div class="timeline">
+    <div class="tl-item reveal">
+      <div class="tl-dot" style="background:var(--gold)"></div>
+      <div class="tl-card">
+        <div class="tl-thumb" id="hawan-thumb">
+          <img src="wedding_imgs/hawan.PNG" alt="Hawan Puja" loading="eager" decoding="async" fetchpriority="high">
+          <div class="tl-thumb-ov"></div>
+        </div>
+        <div class="tl-body">
+          <span class="tl-icon">🪔</span>
+          <div class="tl-name">Hawan Puja</div>
+          <div class="tl-date" style="font-style:italic; letter-spacing:.1em;"><span>19</span><sup style="font-size:.7em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> November 2026</div>
+          <div class="tl-time">Evening 5PM · Sacred Ritual</div>
+          <div class="tl-venue">Skri Ji Kunj-Manohar Nagar Colony, Lucknow</div>
+          <span class="tl-pill ph">Blessings · Purity · Divine Grace</span>
+        </div>
+      </div>
+    </div>
     <div class="tl-item reveal">
       <div class="tl-dot" style="background:var(--gold)"></div>
       <div class="tl-card">
@@ -1067,7 +1097,7 @@ footer span{color:var(--gold)}
         <div class="tl-body">
           <span class="tl-icon">🌼</span>
           <div class="tl-name">Haldi</div>
-          <div class="tl-date">24 November 2026</div>
+          <div class="tl-date" style="font-style:italic; letter-spacing:.1em;"><span>24</span><sup style="font-size:.7em; line-height:0; vertical-align:super;">th</sup> November 2026</div>
           <div class="tl-time">Morning · Sunrise Ritual</div>
           <div class="tl-venue">Bansari Resort &amp; Banquet, Surat</div>
           <span class="tl-pill ph">Begin with Turmeric &amp; Love</span>
@@ -1084,7 +1114,7 @@ footer span{color:var(--gold)}
         <div class="tl-body">
           <span class="tl-icon">🎶</span>
           <div class="tl-name">Sangeet</div>
-          <div class="tl-date">24 November 2026</div>
+          <div class="tl-date" style="font-style:italic; letter-spacing:.1em;"><span>24</span><sup style="font-size:.7em; line-height:0; vertical-align:super;">th</sup> November 2026</div>
           <div class="tl-time">Evening Soirée · Cocktails &amp; Dance</div>
           <div class="tl-venue">Bansari Resort &amp; Banquet, Surat</div>
           <span class="tl-pill ps">Dance · Music · Joy</span>
@@ -1102,7 +1132,7 @@ footer span{color:var(--gold)}
         <div class="tl-body">
           <span class="tl-icon">🪔</span>
           <div class="tl-name">Saatak Puja</div>
-          <div class="tl-date">25 November 2026</div>
+          <div class="tl-date" style="font-style:italic; letter-spacing:.1em;"><span>25</span><sup style="font-size:.7em; line-height:0; vertical-align:super;">th</sup> November 2026</div>
           <div class="tl-time">Morning · Vedic Chants &amp; Traditional Feast</div>
           <div class="tl-venue">Bansari Resort &amp; Banquet, Surat</div>
           <span class="tl-pill ps">Blessings · Devotion · Serenity</span>
@@ -1120,7 +1150,7 @@ footer span{color:var(--gold)}
         <div class="tl-body">
           <span class="tl-icon">💍</span>
           <div class="tl-name">Wedding</div>
-          <div class="tl-date">25 November 2026</div>
+          <div class="tl-date" style="font-style:italic; letter-spacing:.1em;"><span>25</span><sup style="font-size:.7em; line-height:0; vertical-align:super;">th</sup> November 2026</div>
           <div class="tl-time">Under the Stars · Sacred Vows</div>
           <div class="tl-venue">Bansari Resort &amp; Banquet, Surat</div>
           <span class="tl-pill pw">The Sacred Union</span>
@@ -1136,16 +1166,33 @@ footer span{color:var(--gold)}
     <p class="eyebrow reveal">The Setting</p>
     <h2 class="stitle reveal rd1">Where Love Unfolds</h2>
     <span class="ornament reveal rd2">✦ ❀ ✦</span>
-    <div class="vmosaic reveal rd2">
-      <div class="vm-main" id="venue-main">
-        <img src="wedding_imgs/resortview.jpg" alt="Bansari Resort &amp; Banquet" loading="lazy" decoding="async">
-        <div class="vm-lbl">Bansari Resort &amp; Banquet · Surat, Gujarat</div>
+    <div class="venues">
+      <div class="reveal rd2">
+        <div class="vmosaic">
+          <div class="vm-main" id="hawan-venue-main">
+            <img src="wedding_imgs/resortview.jpg" alt="Hawan Venue" loading="lazy" decoding="async">
+            <div class="vm-lbl">Hawan Venue · Lucknow</div>
+          </div>
+        </div>
+        <div class="vcard">
+          <div class="vname">Hawan Venue</div>
+          <div class="vaddr"> 442/040 - Shri Ji Kunj <br>Manohar Nagar Colony, Near Mother and Child Care Center<br>Lucknow - 226003</div>
+          <a href="https://maps.app.goo.gl/7nhVFeuPwDoJCiAR6" target="_blank" rel="noopener" class="vbtn">📍 View on Maps</a>
+        </div>
       </div>
-    </div>
-    <div class="vcard reveal rd3">
-      <div class="vname">Bansari Resort &amp; Banquet</div>
-      <div class="vaddr">Near Chehar Mata Temple, Pasodara,<br>To, Vav Rd, Surat, Gujarat — 394326</div>
-      <a href="https://maps.google.com/?q=Bansari+Resort+Banquet+Pasodara+Surat+Gujarat" target="_blank" rel="noopener" class="vbtn">📍 View on Maps</a>
+      <div class="reveal rd3">
+        <div class="vmosaic">
+          <div class="vm-main" id="venue-main">
+            <img src="wedding_imgs/resortview.jpg" alt="Bansari Resort &amp; Banquet" loading="lazy" decoding="async">
+            <div class="vm-lbl">Wedding Venue · Bansari Resort &amp; Banquet</div>
+          </div>
+        </div>
+        <div class="vcard">
+          <div class="vname">Wedding Venue</div>
+          <div class="vaddr">Bansari Resort &amp; Banquet<br>Near Chehar Mata Temple, Pasodara,<br>To, Vav Rd, Surat, Gujarat — 394326</div>
+          <a href="https://maps.google.com/?q=Bansari+Resort+Banquet+Pasodara+Surat+Gujarat" target="_blank" rel="noopener" class="vbtn">📍 View on Maps</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1161,7 +1208,7 @@ footer span{color:var(--gold)}
       <form id="rsvp-form" novalidate>
         <div class="fg"><label class="fl" for="fn">Your Full Name *</label><input class="fi" type="text" id="fn" placeholder="e.g. Priya Rastogi/Patel" required></div>
         <div class="fg"><label class="fl">Will you be attending? *</label><div class="rg"><label class="rl"><input type="radio" name="attending" value="Yes — I'll be there! 🎉"> Yes, I'll be there! 🎉</label><label class="rl"><input type="radio" name="attending" value="Unable to attend 😢"> Unable to attend 😢</label></div></div>
-        <div class="fg"><label class="fl">Which event(s) will you attend?</label><div class="rg" style="flex-direction:column;gap:.7rem"><label class="rl"><input type="checkbox" name="events" value="Haldi · 24 Nov · Morning"> 🌼 Haldi · 24 Nov · Morning</label><label class="rl"><input type="checkbox" name="events" value="Sangeet · 24 Nov · Evening"> 🎶 Sangeet · 24 Nov · Evening</label><label class="rl"><input type="checkbox" name="events" value="Saatak · 25 Nov · Morning"> 🕉️ Saatak · 25 Nov · Morning</label><label class="rl"><input type="checkbox" name="events" value="Wedding · 25 Nov · Night"> 💍 Wedding · 25 Nov · Night</label><label class="rl"><input type="checkbox" id="all-events" name="events" value="All Events"> 🎊 All Events</label></div></div>
+        <div class="fg"><label class="fl">Which event(s) will you attend?</label><div class="rg" style="flex-direction:column;gap:.7rem"><label class="rl"><input type="checkbox" name="events" value="Hawan Puja · 19 Nov · Evening"> 🪔 Hawan Puja · 19 Nov · Evening</label><label class="rl"><input type="checkbox" name="events" value="Haldi · 24 Nov · Morning"> 🌼 Haldi · 24 Nov · Morning</label><label class="rl"><input type="checkbox" name="events" value="Sangeet · 24 Nov · Evening"> 🎶 Sangeet · 24 Nov · Evening</label><label class="rl"><input type="checkbox" name="events" value="Saatak · 25 Nov · Morning"> 🕉️ Saatak · 25 Nov · Morning</label><label class="rl"><input type="checkbox" name="events" value="Wedding · 25 Nov · Night"> 💍 Wedding · 25 Nov · Night</label><label class="rl"><input type="checkbox" id="all-events" name="events" value="All Events"> 🎊 All Events</label></div></div>
         <div class="fg"><label class="fl" for="fg2">Number of People Attending *</label><select class="fsel fi" id="fg2" required><option value="" disabled selected>Select number of people</option><option value="1">Just me — 1 person</option><option value="2">2 people</option><option value="3">3 people</option><option value="4">4 people</option><option value="5">5 people</option><option value="6+">6 or more</option></select></div>
         <div class="fg"><label class="fl" for="fm">A Message for Ami &amp; Ansh 💌</label><textarea class="fta" id="fm" placeholder="Share your love, wishes, or a favourite memory…"></textarea></div>
         <button type="submit" class="rsub" id="rsub">✦ &nbsp;Send My RSVP&nbsp; ✦</button>
@@ -1178,14 +1225,14 @@ footer span{color:var(--gold)}
     <div class="fborder reveal"></div>
     <p class="cq reveal rd1">"A wedding is not just a ceremony,<br>it is the beginning of the most beautiful story.<br>We are so grateful to share ours with you."</p>
     <span class="gline reveal rd2"></span>
-    <p class="csub reveal rd2">With all our love — Ami &amp; Ansh · 24 - 25 November 2026</p>
+    <p class="csub reveal rd2" style="font-style:italic;">With all our love — Ami &amp; Ansh · 19<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup>, 24<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> &amp; 25<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> November 2026</p>
     <div class="reveal rd3"><a href="#rsvp" class="cfinal">✦ &nbsp;Join Us in Celebration&nbsp; ✦</a></div>
     <div class="fborder reveal" style="margin-top:3rem"></div>
     <div class="frow reveal">🌺 💐 🌸 🌺 💐</div>
   </div>
 </section>
 
-<footer>Made with <span>❤️</span> for <span>Ami &amp; Ansh</span> · 24 - 25 November 2026 · Bansari Resort, Surat</footer>
+<footer>Made with <span>❤️</span> for <span>Ami &amp; Ansh</span> · 19<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup>, 24<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> &amp; 25<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> November 2026 · Bansari Resort, Surat</footer>
 
 <!-- ═══════════════════════════════════════════════════
      JAVASCRIPT — ROBUST IMAGE LOADING
@@ -1501,14 +1548,14 @@ function attachImgObserver(thumb, img){
 }
 
 // Timeline cards
-['haldi-thumb','sangeet-thumb','saatak-thumb','wedding-thumb'].forEach(id => {
+['hawan-thumb','haldi-thumb','sangeet-thumb','saatak-thumb','wedding-thumb'].forEach(id => {
   const thumb = document.getElementById(id);
   if(thumb){ attachImgObserver(thumb, thumb.querySelector('img')); }
 });
 
-// Venue image
-(function(){
-  const vm = document.getElementById('venue-main');
+// Venue images
+['venue-main','hawan-venue-main'].forEach(id => {
+  const vm = document.getElementById(id);
   if(!vm) return;
   const img = vm.querySelector('img');
   const io = new IntersectionObserver(entries => {
@@ -1526,7 +1573,7 @@ function attachImgObserver(thumb, img){
     }
   }, {threshold:0.1, rootMargin:'120px'});
   io.observe(vm);
-})();
+});
 
 /* ── 7. COUNTDOWN ────────────────────────────────────── */
 function tick(){
