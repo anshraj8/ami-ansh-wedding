@@ -525,7 +525,7 @@ section{position:relative;padding:6rem 1.5rem;overflow:hidden;contain:layout sty
   background:rgba(255,255,255,.07);
   border:1px solid rgba(201,168,76,.25);
   border-radius:20px;padding:1.4rem 1.6rem;
-  min-width:0;flex:1;max-width:120px;text-align:center;
+  min-width:0;flex:1;max-width:120px;text-align:center;overflow:visible;
   box-shadow:0 4px 24px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.08);
   backdrop-filter:blur(12px);
   transition:transform .3s var(--ease-spring),box-shadow .3s;
@@ -537,6 +537,9 @@ section{position:relative;padding:6rem 1.5rem;overflow:hidden;contain:layout sty
   background:linear-gradient(135deg,#fff 40%,rgba(201,168,76,.8));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
+
+/* Prevent digit glyphs from being visually clipped at the container edge */
+.cdnum{display:inline-block;padding:0 .12rem;box-sizing:content-box}
 .cdlbl{font-size:clamp(.5rem,1.8vw,.6rem);letter-spacing:.3em;text-transform:uppercase;color:rgba(255,200,180,.6);margin-top:.4rem}
 .cdhead{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,2.5vw,1.5rem);color:rgba(255,230,220,.8);margin-top:1.8rem;font-style:italic;position:relative}
 @media(max-width:480px){
@@ -717,25 +720,14 @@ section{position:relative;padding:6rem 1.5rem;overflow:hidden;contain:layout sty
 .venues{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem;max-width:1100px;margin:2.5rem auto 0;align-items:start}
 .vmosaic{border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(100,40,60,.2)}
 .vm-main{
-  height:340px;overflow:hidden;position:relative;
-  background:#e8d5dc;
+  min-height:140px;overflow:hidden;position:relative;
+  background:linear-gradient(135deg,#f8e6ea 0%,#efe1f5 100%);
+  display:flex;align-items:center;justify-content:center;
+  padding:1.4rem 1.2rem;
 }
-/* Shimmer for venue image */
-.vm-main::before{
-  content:'';position:absolute;inset:0;z-index:1;
-  background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 100%);
-  background-size:600px 100%;animation:shimmer 1.6s infinite linear;
-  transition:opacity .4s ease;
-}
-.vm-main.img-loaded::before{opacity:0}
-.vm-main img{
-  width:100%;height:100%;object-fit:cover;object-position:center center;display:block;
-  position:relative;z-index:2;
-  opacity:0;transition:opacity .55s ease,transform .7s ease;
-}
-.vm-main.img-loaded img{opacity:1}
-.vm-main:hover img{transform:scale(1.03)}
-.vm-lbl{position:absolute;bottom:0;left:0;right:0;z-index:5;padding:.6rem .9rem;background:linear-gradient(to top,rgba(30,8,20,.72),transparent);color:rgba(255,218,206,.92);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+.vm-main::before{display:none}
+.vm-main img{display:none}
+.vm-lbl{position:relative;z-index:5;padding:.7rem 1rem;border:1px solid rgba(201,168,76,.24);border-radius:999px;background:rgba(255,255,255,.72);color:#7a4a58;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;box-shadow:0 8px 24px rgba(180,120,140,.12)}
 
 .vcard{margin-top:1rem;background:rgba(255,255,255,.65);backdrop-filter:blur(16px);border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:1.6rem 1.8rem;box-shadow:0 12px 40px rgba(180,120,140,.12)}
 .vname{font-family:'Italiana',serif;font-size:1.8rem;font-weight:400;color:#6b3a4e;margin-bottom:.5rem}
@@ -744,7 +736,7 @@ section{position:relative;padding:6rem 1.5rem;overflow:hidden;contain:layout sty
 .vbtn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,168,76,.52)}
 @media(max-width:700px){
   .venues{grid-template-columns:1fr;gap:1.2rem}
-  .vm-main{height:280px}
+  .vm-main{min-height:120px}
   .vcard{padding:1.3rem 1.2rem}
 }
 
@@ -1067,7 +1059,7 @@ footer span{color:var(--gold)}
     <p class="eyebrow reveal">The Celebrations</p>
     <h2 class="stitle reveal rd1">Sacred Moments</h2>
     <span class="ornament reveal rd2">✦ ❀ ✦</span>
-    <p class="reveal rd2" style="color:#9a7080;font-size:.88rem; font-style:italic; letter-spacing:.04em;">19<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup>, 24<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> &amp; 25<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> November 2026 &nbsp;·&nbsp; Bansari Resort, Surat, Gujarat</p>
+    <p class="reveal rd2" style="color:#9a7080;font-size:.88rem; font-style:italic; letter-spacing:.04em;">19<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup>, 24<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> &amp; 25<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> November 2026 &nbsp;·&nbsp;</p>
   </div>
   <div class="timeline">
     <div class="tl-item reveal">
@@ -1170,20 +1162,18 @@ footer span{color:var(--gold)}
       <div class="reveal rd2">
         <div class="vmosaic">
           <div class="vm-main" id="hawan-venue-main">
-            <img src="wedding_imgs/resortview.jpg" alt="Hawan Venue" loading="lazy" decoding="async">
             <div class="vm-lbl">Hawan Venue · Lucknow</div>
           </div>
         </div>
         <div class="vcard">
           <div class="vname">Hawan Venue</div>
-          <div class="vaddr"> 442/040 - Shri Ji Kunj <br>Manohar Nagar Colony, Near Mother and Child Care Center<br>Lucknow - 226003</div>
+          <div class="vaddr">442/040 - Shri Ji Kunj<br>Manohar Nagar Colony, Near Mother and Child Care Center<br>Lucknow - 226003</div>
           <a href="https://maps.app.goo.gl/7nhVFeuPwDoJCiAR6" target="_blank" rel="noopener" class="vbtn">📍 View on Maps</a>
         </div>
       </div>
       <div class="reveal rd3">
         <div class="vmosaic">
           <div class="vm-main" id="venue-main">
-            <img src="wedding_imgs/resortview.jpg" alt="Bansari Resort &amp; Banquet" loading="lazy" decoding="async">
             <div class="vm-lbl">Wedding Venue · Bansari Resort &amp; Banquet</div>
           </div>
         </div>
@@ -1232,7 +1222,7 @@ footer span{color:var(--gold)}
   </div>
 </section>
 
-<footer>Made with <span>❤️</span> for <span>Ami &amp; Ansh</span> · 19<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup>, 24<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> &amp; 25<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> November 2026 · Bansari Resort, Surat</footer>
+<footer>Made with <span>❤️</span> for <span>Ami &amp; Ansh</span> · 19<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup>, 24<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> &amp; 25<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> November 2026 </footer>
 
 <!-- ═══════════════════════════════════════════════════
      JAVASCRIPT — ROBUST IMAGE LOADING
@@ -1553,11 +1543,12 @@ function attachImgObserver(thumb, img){
   if(thumb){ attachImgObserver(thumb, thumb.querySelector('img')); }
 });
 
-// Venue images
+// Venue cards
 ['venue-main','hawan-venue-main'].forEach(id => {
   const vm = document.getElementById(id);
   if(!vm) return;
   const img = vm.querySelector('img');
+  if(!img) return;
   const io = new IntersectionObserver(entries => {
     if(!entries[0].isIntersecting) return;
     io.disconnect();
