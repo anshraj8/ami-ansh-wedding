@@ -397,6 +397,34 @@ nav a::after{
 nav a:hover{color:var(--gold)}
 nav a:hover::after{left:0;right:0}
 
+.music-control{
+  position:fixed;right:1rem;bottom:1rem;z-index:1200;
+  display:flex;align-items:center;gap:.5rem;
+  padding:.45rem .55rem;border-radius:999px;
+  background:rgba(30,14,22,.55);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.24);
+  box-shadow:0 10px 30px rgba(0,0,0,.22);
+}
+.music-btn{
+  width:3rem;height:3rem;border-radius:50%;
+  border:1px solid rgba(255,255,255,.4);
+  background:rgba(255,255,255,.16);
+  color:#fff;font-size:1.15rem;cursor:pointer;
+  transition:transform .2s ease,background .2s ease;
+}
+.music-btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.22)}
+.music-btn.is-playing{background:rgba(236,189,91,.42)}
+.music-slider{
+  width:96px;height:6px;appearance:none;-webkit-appearance:none;
+  background:rgba(255,255,255,.24);border-radius:999px;outline:none;
+}
+.music-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;
+  background:#fff;cursor:pointer;border:1px solid rgba(30,14,22,.4);
+}
+.music-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer;border:1px solid rgba(30,14,22,.4)}
+
 /* ═══════════════════════════════════════════════════════
    GLOBAL KEYFRAMES
 ═══════════════════════════════════════════════════════ */
@@ -519,8 +547,11 @@ section{position:relative;padding:6rem 1.5rem;overflow:hidden;contain:layout sty
              radial-gradient(ellipse at 30% 70%,rgba(232,132,154,.08) 0%,transparent 50%);
   animation:rotateSlow 30s linear infinite;
 }
-.cdlabel{font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:rgba(201,168,76,.8);margin-bottom:1.8rem;position:relative}
-.cdgrid{display:flex;justify-content:center;gap:1.2rem;flex-wrap:nowrap;align-items:center;position:relative}
+#confetti-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:20}
+.cdlabel{font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:rgba(201,168,76,.8);margin-bottom:1.8rem;position:relative;z-index:3}
+.countdown-scratch{position:relative;max-width:700px;margin:0 auto;z-index:3}
+#scratch-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4}
+.cdgrid{display:flex;justify-content:center;gap:1.2rem;flex-wrap:nowrap;align-items:center;position:relative;z-index:1}
 .cdunit{
   background:rgba(255,255,255,.07);
   border:1px solid rgba(201,168,76,.25);
@@ -542,6 +573,16 @@ section{position:relative;padding:6rem 1.5rem;overflow:hidden;contain:layout sty
 .cdnum{display:inline-block;padding:0 .12rem;box-sizing:content-box}
 .cdlbl{font-size:clamp(.5rem,1.8vw,.6rem);letter-spacing:.3em;text-transform:uppercase;color:rgba(255,200,180,.6);margin-top:.4rem}
 .cdhead{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,2.5vw,1.5rem);color:rgba(255,230,220,.8);margin-top:1.8rem;font-style:italic;position:relative}
+.scratch-surface{
+  position:absolute;inset:0;border-radius:24px;
+  cursor:grab;overflow:hidden;touch-action:none;user-select:none;
+  z-index:3;pointer-events:auto;opacity:1;transition:opacity .4s ease;
+  box-shadow:0 8px 32px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.35);
+  /* Isolates blending/compositing to this element only — guarantees the
+     countdown numbers behind can never bleed through the unscratched card */
+  isolation:isolate;
+}
+.countdown-scratch.revealed .scratch-surface{opacity:0;pointer-events:none;transition:opacity .9s ease}
 @media(max-width:480px){
   .cdgrid{gap:.6rem;}
   .cdunit{max-width:140px;flex:1 1 0;min-width:70px;padding:.85rem .85rem;}
@@ -804,6 +845,12 @@ footer span{color:var(--gold)}
 </head>
 <body>
 
+<div class="music-control" id="music-control">
+  <button class="music-btn" id="music-toggle" aria-label="Toggle music">🔊</button>
+  <input class="music-slider" id="music-slider" type="range" min="0" max="1" step="0.05" value="0.38" aria-label="Music volume">
+</div>
+<audio id="wedding-song" loop preload="auto" playsinline type="audio/mpeg" src="wedding_imgs/Ekadantaya Vakratundaya (Flute Version).mp3"></audio>
+
 <!-- ═══════════════════════════════════════════════════
      INVITATION COVER
 ═══════════════════════════════════════════════════════ -->
@@ -914,14 +961,20 @@ footer span{color:var(--gold)}
 
 <!-- ═══ COUNTDOWN ════════════════════════════════════ -->
 <section id="countdown">
+  <canvas id="confetti-canvas"></canvas>
   <p class="cdlabel reveal">The Big Day Approaches</p>
-  <div class="cdgrid reveal rd1">
-    <div class="cdunit"><div class="cdnum" id="cd-d">--</div><div class="cdlbl">Days</div></div>
-    <div class="cdunit"><div class="cdnum" id="cd-h">--</div><div class="cdlbl">Hours</div></div>
-    <div class="cdunit"><div class="cdnum" id="cd-m">--</div><div class="cdlbl">Minutes</div></div>
-    <div class="cdunit"><div class="cdnum" id="cd-s">--</div><div class="cdlbl">Seconds</div></div>
+  <div class="countdown-scratch reveal rd1" id="countdown-scratch">
+    <div class="scratch-surface" id="scratch-surface">
+      <canvas id="scratch-canvas"></canvas>
+    </div>
+    <div class="cdgrid" id="countdown-grid">
+      <div class="cdunit"><div class="cdnum" id="cd-d">--</div><div class="cdlbl">Days</div></div>
+      <div class="cdunit"><div class="cdnum" id="cd-h">--</div><div class="cdlbl">Hours</div></div>
+      <div class="cdunit"><div class="cdnum" id="cd-m">--</div><div class="cdlbl">Minutes</div></div>
+      <div class="cdunit"><div class="cdnum" id="cd-s">--</div><div class="cdlbl">Seconds</div></div>
+    </div>
+    <p class="cdhead reveal rd2">Until Ami &amp; Ansh say "I Do" &nbsp;💍</p>
   </div>
-  <p class="cdhead reveal rd2">Until Ami &amp; Ansh say "I Do" &nbsp;💍</p>
 </section>
 
 <!-- ═══ STORY ═════════════════════════════════════════ -->
@@ -1001,53 +1054,6 @@ footer span{color:var(--gold)}
         <img src="wedding_imgs/DSC06504.jpg" alt="Ami and Ansh at Edinburgh Castle" loading="lazy" decoding="async">
         <div class="slide-caption"><div class="loc">📍 Edinburgh Castle, Scotland</div>Holding on to you at the top of the world</div>
       </div>
-      <!--
-      <div class="slide" data-src="wedding_imgs/DSC5841.jpg">
-        <div class="slide-bg"></div>
-        <img src="wedding_imgs/DSC5841.jpg" alt="Ami and Ansh with camera at gothic garden" loading="lazy" decoding="async">
-        <div class="slide-caption"><div class="loc">📍 St Dunstan in the East, London</div>Capturing smiles — the ones only he gets to see</div>
-      </div>
-      <div class="slide" data-src="wedding_imgs/DSC5945.jpg">
-        <div class="slide-bg"></div>
-        <img src="wedding_imgs/DSC5945.jpg" alt="Ami and Ansh at the London Eye" loading="lazy" decoding="async">
-        <div class="slide-caption"><div class="loc">📍 South Bank, London Eye</div>The world keeps spinning — but in this moment, it's just us</div>
-      </div>
-      <div class="slide" data-src="wedding_imgs/DSC5969.jpg">
-        <div class="slide-bg"></div>
-        <img src="wedding_imgs/DSC5969.jpg" alt="Ami and Ansh near Big Ben" loading="lazy" decoding="async">
-        <div class="slide-caption"><div class="loc">📍 Westminster, London</div>Time stood still on the streets of London — with you</div>
-      </div>
-      <div class="slide" data-src="wedding_imgs/DSC06504.jpg">
-        <div class="slide-bg"></div>
-        <img src="wedding_imgs/DSC06504.jpg" alt="Ami and Ansh at Edinburgh Castle" loading="lazy" decoding="async">
-        <div class="slide-caption"><div class="loc">📍 Edinburgh Castle, Scotland</div>Holding on to you at the top of the world</div>
-      </div>
-      <div class="slide" data-src="wedding_imgs/DSC06550.jpg">
-        <div class="slide-bg"></div>
-        <img src="wedding_imgs/DSC06550.jpg" alt="Ami and Ansh walking Edinburgh steps" loading="lazy" decoding="async">
-        <div class="slide-caption"><div class="loc">📍 The Vennel Steps, Edinburgh</div>Every path is an adventure — as long as you're beside me</div>
-      </div>
-      <div class="slide" data-src="wedding_imgs/DSC06614.jpg">
-        <div class="slide-bg"></div>
-        <img src="wedding_imgs/DSC06614.jpg" alt="Ami and Ansh in Edinburgh lantern alley" loading="lazy" decoding="async">
-        <div class="slide-caption"><div class="loc">📍 Old Town Edinburgh, Scotland</div>Golden light, warm hearts — Edinburgh had its own magic</div>
-      </div>
-      <div class="slide" data-src="wedding_imgs/DSC06627.jpg">
-        <div class="slide-bg"></div>
-        <img src="wedding_imgs/DSC06627.jpg" alt="Ami and Ansh on Victoria Street Edinburgh" loading="lazy" decoding="async">
-        <div class="slide-caption"><div class="loc">📍 Victoria Street, Edinburgh</div>The most colourful street deserved the most colourful love story</div>
-      </div>
-      <div class="slide" data-src="wedding_imgs/DSC06820.jpg">
-        <div class="slide-bg"></div>
-        <img src="wedding_imgs/DSC06820.jpg" alt="Ami and Ansh at Makars Court Edinburgh" loading="lazy" decoding="async">
-        <div class="slide-caption"><div class="loc">📍 Makars Court, Edinburgh</div>Written in the stone of every cobbled street — this love</div>
-      </div>
-      <div class="slide" data-src="wedding_imgs/DSC06840.jpg">
-        <div class="slide-bg"></div>
-        <img src="wedding_imgs/DSC06840.jpg" alt="Ami and Ansh sitting at Edinburgh lamp post" loading="lazy" decoding="async">
-        <div class="slide-caption"><div class="loc">📍 Makars Court, Edinburgh</div>Two hearts, one direction — always</div>
-      </div>
-      -->
     </div><!-- /ss-track -->
     <div class="ss-dots" id="ss-dots"></div>
   </div>
@@ -1315,19 +1321,81 @@ if(heroImg.complete && heroImg.naturalWidth > 0){
 
 /* ── 3. INVITATION COVER ────────────────────────────── */
 const cover = document.getElementById('invitation-cover');
+const audio = document.getElementById('wedding-song');
+const musicToggle = document.getElementById('music-toggle');
+const musicSlider = document.getElementById('music-slider');
 document.body.style.overflow = 'hidden';
 let cardReady = false;
 setTimeout(() => { cardReady = true; }, 7500);
+
+function setMusicButtonState(isPlaying){
+  if(!musicToggle) return;
+  musicToggle.classList.toggle('is-playing', isPlaying);
+  musicToggle.textContent = isPlaying ? '🔊' : '🔇';
+}
+
+function syncVolume(){
+  if(!audio || !musicSlider) return;
+  const level = Number(musicSlider.value || 0);
+  audio.volume = level;
+}
+
+async function startMusic(){
+  if(!audio) return;
+  if(!audio.src){
+    console.warn('No audio file has been linked yet.');
+    return;
+  }
+  if(!audio.canPlayType('audio/mpeg')){
+    console.warn('This browser may not support the MP3 format for background music.');
+    return;
+  }
+
+  syncVolume();
+  audio.muted = false;
+  try {
+    await audio.play();
+    setMusicButtonState(true);
+  } catch (err) {
+    console.log('Music playback needs a user interaction first:', err);
+    setMusicButtonState(false);
+  }
+}
 
 function openCard(){
   if(!cardReady) return;
   if(cover.classList.contains('cover-opening')) return;
   cover.classList.add('cover-opening');
-  setTimeout(() => { cover.classList.add('cover-done'); document.body.style.overflow=''; }, 1400);
+  setTimeout(() => {
+    cover.classList.add('cover-done');
+    document.body.style.overflow='';
+    startMusic();
+  }, 1400);
 }
 cover.addEventListener('click', openCard);
 cover.addEventListener('touchend', e => { e.preventDefault(); openCard(); }, {passive:false});
 setTimeout(() => openCard(), 11000);
+
+if(musicToggle){
+  musicToggle.addEventListener('click', async () => {
+    if(!audio) return;
+    if(audio.paused){
+      await startMusic();
+    } else {
+      audio.pause();
+      setMusicButtonState(false);
+    }
+  });
+}
+
+if(musicSlider){
+  musicSlider.addEventListener('input', () => {
+    syncVolume();
+    if(audio && !audio.paused && audio.volume > 0){
+      setMusicButtonState(true);
+    }
+  });
+}
 
 /* ── 4. PETAL CANVAS ─────────────────────────────────── */
 const canvas = document.getElementById('petal-canvas');
@@ -1355,6 +1423,316 @@ const petals = Array.from({length:28}, () => ({
   });
   requestAnimationFrame(anim);
 })();
+
+/* ── 5. COUNTDOWN SCRATCH REVEAL + CONFETTI ─────────── */
+const scratchWrap = document.getElementById('countdown-scratch');
+const scratchSurface = document.getElementById('scratch-surface');
+const scratchCanvas = document.getElementById('scratch-canvas');
+const scratchCtx = scratchCanvas.getContext('2d');
+const confettiCanvas = document.getElementById('confetti-canvas');
+const confettiCtx = confettiCanvas.getContext('2d');
+let scratchPointerDown = false;
+let confettiParticles = [];
+let confettiActive = false;
+const SCRATCH_RADIUS = 26;
+const SCRATCH_REVEAL_THRESHOLD = 0.8; // reveal once most of the card has been scratched — the last remaining gold then fades away smoothly
+const SCRATCH_CELL = 16; // grid cell size in CSS px, used to estimate real coverage
+
+let scratchRevealed = false;
+let scratchGrid = null;
+let scratchCols = 0, scratchRows = 0, scratchTotalCells = 0, scratchClearedCells = 0;
+
+let confettiCssW = 0, confettiCssH = 0;
+function resizeConfettiCanvas(){
+  const rect = document.getElementById('countdown').getBoundingClientRect();
+  confettiCssW = rect.width;
+  confettiCssH = rect.height;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  confettiCanvas.width = Math.max(1, Math.floor(rect.width * dpr));
+  confettiCanvas.height = Math.max(1, Math.floor(rect.height * dpr));
+  confettiCanvas.style.width = rect.width + 'px';
+  confettiCanvas.style.height = rect.height + 'px';
+  confettiCtx.setTransform(1,0,0,1,0,0);
+  confettiCtx.scale(dpr, dpr);
+}
+
+
+// Paint the scratchable canvas with a rich gold-foil gradient (matches --gold / --gold-light).
+// Everything the user sees before scratching — gradient, foil lines, sparkle, instruction text —
+// is drawn onto this one canvas, so scratching genuinely erases all of it together instead of
+// leaving decorative layers behind.
+function paintGoldSurface(rect){
+  scratchCtx.clearRect(0, 0, rect.width, rect.height);
+
+  const grad = scratchCtx.createLinearGradient(0, 0, rect.width, rect.height);
+  grad.addColorStop(0, '#e8c96a');
+  grad.addColorStop(0.35, '#c9a84c');
+  grad.addColorStop(0.65, '#dab965');
+  grad.addColorStop(1, '#b8923c');
+  scratchCtx.fillStyle = grad;
+  scratchCtx.fillRect(0, 0, rect.width, rect.height);
+
+  // Diagonal foil sheen lines, drawn straight onto the canvas
+  scratchCtx.save();
+  scratchCtx.strokeStyle = 'rgba(255,255,255,.2)';
+  scratchCtx.lineWidth = 2;
+  const step = 10;
+  const diag = rect.width + rect.height;
+  for(let i = -rect.height; i < diag; i += step){
+    scratchCtx.beginPath();
+    scratchCtx.moveTo(i, 0);
+    scratchCtx.lineTo(i + rect.height, rect.height);
+    scratchCtx.stroke();
+  }
+  scratchCtx.restore();
+
+  // Soft sheen highlight
+  const sheen = scratchCtx.createLinearGradient(0, 0, rect.width, rect.height * 0.6);
+  sheen.addColorStop(0, 'rgba(255,255,255,.25)');
+  sheen.addColorStop(0.5, 'rgba(255,255,255,0)');
+  sheen.addColorStop(1, 'rgba(255,255,255,0)');
+  scratchCtx.fillStyle = sheen;
+  scratchCtx.fillRect(0, 0, rect.width, rect.height);
+
+  // Fine sparkle flecks
+  scratchCtx.fillStyle = 'rgba(255,255,255,.55)';
+  for(let i = 0; i < 22; i++){
+    const sx = Math.random() * rect.width;
+    const sy = Math.random() * rect.height;
+    scratchCtx.beginPath();
+    scratchCtx.arc(sx, sy, 1 + Math.random(), 0, Math.PI * 2);
+    scratchCtx.fill();
+  }
+
+  // Instruction text, baked in so it scratches away with everything else
+  const fontSize = Math.max(11, Math.min(15, rect.width * 0.032));
+  scratchCtx.fillStyle = 'rgba(58,24,16,.82)';
+  scratchCtx.font = `600 ${fontSize}px Jost, sans-serif`;
+  scratchCtx.textAlign = 'center';
+  scratchCtx.textBaseline = 'middle';
+  scratchCtx.fillText('S C R A T C H   T O   R E V E A L   ✦', rect.width / 2, rect.height / 2);
+}
+
+let scratchLastRectW = 0, scratchLastRectH = 0;
+
+function resizeScratchCanvas(force){
+  if (!scratchCanvas || !scratchSurface) return;
+  const rect = scratchSurface.getBoundingClientRect();
+  if (rect.width < 1 || rect.height < 1) return;
+
+  // Skip redundant rebuilds — this fires on every ResizeObserver tick, so only
+  // actually repaint/rebuild when the box has genuinely changed size.
+  if (!force && Math.abs(rect.width - scratchLastRectW) < 1 && Math.abs(rect.height - scratchLastRectH) < 1) return;
+  scratchLastRectW = rect.width;
+  scratchLastRectH = rect.height;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  scratchCanvas.width = Math.max(1, Math.floor(rect.width * dpr));
+  scratchCanvas.height = Math.max(1, Math.floor(rect.height * dpr));
+  scratchCanvas.style.width = rect.width + 'px';
+  scratchCanvas.style.height = rect.height + 'px';
+  scratchCtx.setTransform(1,0,0,1,0,0);
+  scratchCtx.scale(dpr, dpr);
+
+  // Rebuild the coverage grid to match the new dimensions exactly — this is what
+  // keeps scratch coordinates aligned with the card's actual rendered size,
+  // including the right-hand edge, even after a late layout shift (e.g. fonts).
+  scratchCols = Math.max(1, Math.ceil(rect.width / SCRATCH_CELL));
+  scratchRows = Math.max(1, Math.ceil(rect.height / SCRATCH_CELL));
+  scratchTotalCells = scratchCols * scratchRows;
+  scratchGrid = new Uint8Array(scratchTotalCells);
+  scratchClearedCells = 0;
+
+  if (scratchRevealed) {
+    // Card was already revealed — stay in sync silently, don't bring the gold back
+    scratchCtx.clearRect(0, 0, rect.width, rect.height);
+    return;
+  }
+
+  paintGoldSurface(rect);
+  scratchWrap.classList.remove('revealed');
+  scratchSurface.style.removeProperty('opacity');
+}
+
+// Marks every grid cell whose center falls inside the scratch circle as cleared,
+// so progress reflects actual area removed rather than number of gestures made.
+function markGridCleared(x, y, radius){
+  if(!scratchGrid) return;
+  const minCol = Math.max(0, Math.floor((x - radius) / SCRATCH_CELL));
+  const maxCol = Math.min(scratchCols - 1, Math.floor((x + radius) / SCRATCH_CELL));
+  const minRow = Math.max(0, Math.floor((y - radius) / SCRATCH_CELL));
+  const maxRow = Math.min(scratchRows - 1, Math.floor((y + radius) / SCRATCH_CELL));
+  const rSq = radius * radius;
+  for(let r = minRow; r <= maxRow; r++){
+    for(let c = minCol; c <= maxCol; c++){
+      const idx = r * scratchCols + c;
+      if(scratchGrid[idx]) continue;
+      const cx = c * SCRATCH_CELL + SCRATCH_CELL / 2;
+      const cy = r * SCRATCH_CELL + SCRATCH_CELL / 2;
+      const dx = cx - x, dy = cy - y;
+      if(dx*dx + dy*dy <= rSq){
+        scratchGrid[idx] = 1;
+        scratchClearedCells++;
+      }
+    }
+  }
+}
+
+function scratchAt(clientX, clientY, rect){
+  const x = clientX - rect.left;
+  const y = clientY - rect.top;
+
+  scratchCtx.globalCompositeOperation = 'destination-out';
+  scratchCtx.beginPath();
+  scratchCtx.arc(x, y, SCRATCH_RADIUS, 0, Math.PI * 2);
+  scratchCtx.fill();
+  scratchCtx.globalCompositeOperation = 'source-over';
+
+  markGridCleared(x, y, SCRATCH_RADIUS);
+
+  if(!scratchRevealed && scratchTotalCells && (scratchClearedCells / scratchTotalCells) >= SCRATCH_REVEAL_THRESHOLD){
+    revealScratch();
+  }
+}
+
+function revealScratch(){
+  if(scratchRevealed) return;
+  scratchRevealed = true;
+  // Let whatever gold remains fade out smoothly via the CSS opacity transition below —
+  // clearing the canvas here first would make the fade invisible (nothing left to fade).
+  scratchWrap.classList.add('revealed');
+  launchConfetti();
+  // Once the fade has fully finished, clear the canvas so it's tidy if the card is ever resized later.
+  setTimeout(() => {
+    if (scratchCanvas) scratchCtx.clearRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+  }, 950);
+}
+
+function startScratch(e){
+  if (!scratchSurface || !scratchCanvas || scratchRevealed) return;
+  if (!e || typeof e.clientX !== 'number' || typeof e.clientY !== 'number') return;
+  const rect = scratchSurface.getBoundingClientRect();
+  const inside = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+  if (!inside) return;
+  scratchPointerDown = true;
+  scratchAt(e.clientX, e.clientY, rect);
+  if (e && typeof e.preventDefault === 'function') e.preventDefault();
+}
+
+function moveScratch(e){
+  if (!scratchPointerDown || !scratchSurface || !scratchCanvas || scratchRevealed) return;
+  if (!e || typeof e.clientX !== 'number' || typeof e.clientY !== 'number') return;
+  const rect = scratchSurface.getBoundingClientRect();
+  const inside = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+  if (!inside) return;
+  scratchAt(e.clientX, e.clientY, rect);
+}
+
+function endScratch(){
+  scratchPointerDown = false;
+}
+
+// Confetti burst tuned to the site's own palette (blush / peach / lavender / cream / rose / gold)
+// Confetti burst tuned to the site's own palette (blush / peach / lavender / cream / rose / gold).
+// Uses real elapsed time (not per-frame velocity accumulation) so each piece has a
+// predictable multi-second life: a quick fade-in, a slow graceful drift/fall, then a fade-out —
+// rather than a strong upward launch that used to send most pieces off-screen before you could see them fall.
+function launchConfetti(){
+  if(confettiActive) return;
+  confettiActive = true;
+  const bounds = document.getElementById('countdown').getBoundingClientRect();
+  const colors = ['#f2a7bb','#f5c5a3','#d8c8f0','#f9e0d0','#e8849a','#c9a84c','#e8c96a','#b5627a','#fff'];
+  const now = performance.now();
+  confettiParticles = Array.from({length:130}, () => ({
+    born: now,
+    duration: 3400 + Math.random() * 1600,     // ~3.4–5s per piece, staggered so the burst doesn't cut off all at once
+    x0: bounds.width * (0.08 + Math.random() * 0.84),
+    y0: bounds.height * (0.1 + Math.random() * 0.22),
+    vx: (Math.random() - 0.5) * 26,             // px/s gentle horizontal carry
+    vy0: -(50 + Math.random() * 110),           // px/s modest initial pop upward
+    gravity: 85 + Math.random() * 35,           // px/s² — slow, paper-like fall
+    size: 4 + Math.random() * 7,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    rotation: Math.random() * Math.PI,
+    spin: (Math.random() - 0.5) * 2.4,          // rad/s
+    sway: Math.random() * Math.PI * 2,
+    swaySpeed: 0.9 + Math.random() * 1.1,       // rad/s
+    swayAmp: 10 + Math.random() * 16            // px
+  }));
+}
+
+function animateConfetti(){
+  if(!confettiCanvas) return;
+  const now = performance.now();
+  confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+  const alive = [];
+  confettiParticles.forEach(p => {
+    const t = (now - p.born) / 1000;             // seconds elapsed for this piece
+    const life = t / (p.duration / 1000);        // 0 → 1 over its lifespan
+    if(life >= 1) return;                        // this piece is done, drop it
+
+    const x = p.x0 + p.vx * t + Math.sin(p.sway + t * p.swaySpeed) * p.swayAmp * Math.min(1, t * 1.5);
+    const y = p.y0 + p.vy0 * t + 0.5 * p.gravity * t * t;
+    const rotation = p.rotation + p.spin * t;
+
+    // Fade in quickly, hold, then fade out gently over the final stretch — no abrupt cutoff
+    let alpha;
+    if(life < 0.08){ alpha = life / 0.08; }
+    else if(life > 0.68){ alpha = 1 - (life - 0.68) / 0.32; }
+    else { alpha = 1; }
+    alpha = Math.max(0, Math.min(1, alpha));
+
+    confettiCtx.save();
+    confettiCtx.translate(x, y); confettiCtx.rotate(rotation);
+    confettiCtx.globalAlpha = alpha;
+    confettiCtx.fillStyle = p.color;
+    confettiCtx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.55);
+    confettiCtx.restore();
+
+    alive.push(p);
+  });
+  confettiParticles = alive;
+  if(confettiParticles.length){
+    requestAnimationFrame(animateConfetti);
+  } else {
+    confettiActive = false;
+    confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+  }
+}
+
+resizeConfettiCanvas();
+resizeScratchCanvas(true);
+window.addEventListener('resize', () => {
+  resizeConfettiCanvas();
+}, {passive:true});
+
+// ResizeObserver catches the cases a plain window-resize listener misses —
+// web fonts finishing late, images reflowing the layout, orientation changes —
+// so the scratch canvas's drawing surface always matches where the card is
+// actually rendered, including its right-hand edge.
+if (scratchSurface && window.ResizeObserver) {
+  const scratchResizeObserver = new ResizeObserver(() => resizeScratchCanvas());
+  scratchResizeObserver.observe(scratchSurface);
+} else if (scratchSurface) {
+  window.addEventListener('resize', () => resizeScratchCanvas(), {passive:true});
+}
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => resizeScratchCanvas());
+}
+
+if (scratchSurface && scratchCanvas) {
+  window.addEventListener('pointerdown', startScratch);
+  window.addEventListener('pointermove', moveScratch);
+  window.addEventListener('pointerup', endScratch);
+  window.addEventListener('pointercancel', endScratch);
+  window.addEventListener('mouseup', endScratch);
+}
+
+function tickConfetti(){
+  if(confettiActive){ animateConfetti(); }
+  requestAnimationFrame(tickConfetti);
+}
+tickConfetti();
 
 /* ── 5. GALLERY: ROBUST CROSSFADE ───────────────────────
    
