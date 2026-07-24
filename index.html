@@ -820,6 +820,22 @@ section{position:relative;padding:6rem 1.5rem;overflow:hidden;contain:layout sty
 .cfinal:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 12px 40px rgba(181,98,122,.52)}
 .fborder{width:100%;max-width:480px;margin:0 auto 2.5rem;height:2px;background:linear-gradient(to right,transparent,var(--blush),var(--gold),var(--lavender),transparent)}
 .frow{display:flex;justify-content:center;gap:.9rem;margin:1.5rem 0;font-size:1.2rem}
+
+/* ── Instagram follow-us block ───────────────────────── */
+.ig-follow{margin:2.2rem 0 2.8rem}
+.ig-follow-label{font-size:.68rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;font-weight:500}
+.ig-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.65rem;
+  padding:.85rem 2.2rem;border-radius:50px;
+  background:linear-gradient(135deg,#f2a7bb,#e8849a,#c9a84c);
+  color:#fff;font-size:.8rem;font-weight:500;letter-spacing:.12em;
+  text-decoration:none;transition:all .4s;min-height:48px;
+  box-shadow:0 6px 26px rgba(201,132,150,.35);
+}
+.ig-btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 12px 38px rgba(201,132,150,.5)}
+.ig-btn svg{width:20px;height:20px;flex-shrink:0}
+.ig-handle{display:block;margin-top:.7rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:#a07888}
+
 footer{background:#1e0e16;color:rgba(255,255,255,.35);text-align:center;padding:1.5rem;font-size:.7rem;letter-spacing:.1em}
 footer span{color:var(--gold)}
 
@@ -1224,6 +1240,18 @@ footer span{color:var(--gold)}
     <p class="csub reveal rd2" style="font-style:italic;">With all our love — Ami &amp; Ansh · 19<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup>, 24<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> &amp; 25<sup style="font-size:.72em; line-height:0; vertical-align:super; margin-left:-.08em;">th</sup> November 2026</p>
     <div class="reveal rd3"><a href="#rsvp" class="cfinal">✦ &nbsp;Join Us in Celebration&nbsp; ✦</a></div>
     <div class="fborder reveal" style="margin-top:3rem"></div>
+    <div class="ig-follow reveal">
+      <div class="ig-follow-label">Follow Our Journey</div>
+      <a class="ig-btn" href="https://www.instagram.com/ansh_ki_ami/" target="_blank" rel="noopener noreferrer" aria-label="Follow Ami and Ansh on Instagram">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="17.35" cy="6.65" r="1.15" fill="currentColor"/>
+        </svg>
+        <span>Follow Us on Instagram</span>
+      </a>
+      <span class="ig-handle">@ansh_ki_ami</span>
+    </div>
     <div class="frow reveal">🌺 💐 🌸 🌺 💐</div>
   </div>
 </section>
@@ -1637,11 +1665,23 @@ function endScratch(){
 // Uses real elapsed time (not per-frame velocity accumulation) so each piece has a
 // predictable multi-second life: a quick fade-in, a slow graceful drift/fall, then a fade-out —
 // rather than a strong upward launch that used to send most pieces off-screen before you could see them fall.
+// Draws a small filled heart centered on the current (translated/rotated) origin,
+// sized so it reads clearly at typical confetti scale (~8-15px).
+function drawConfettiHeart(c, size){
+  const s = size * 0.55; // base unit so hearts feel similarly sized to the old rectangles
+  c.beginPath();
+  c.moveTo(0, s * 0.35);
+  c.bezierCurveTo(-s * 0.5, -s * 0.35, -s * 1.1, s * 0.25, 0, s * 1.05);
+  c.bezierCurveTo(s * 1.1, s * 0.25, s * 0.5, -s * 0.35, 0, s * 0.35);
+  c.closePath();
+  c.fill();
+}
+
 function launchConfetti(){
   if(confettiActive) return;
   confettiActive = true;
   const bounds = document.getElementById('countdown').getBoundingClientRect();
-  const colors = ['#f2a7bb','#f5c5a3','#d8c8f0','#f9e0d0','#e8849a','#c9a84c','#e8c96a','#b5627a','#fff'];
+  const colors = ['#e8384f','#ff5a6e','#d81f3e','#ffffff','#fff8ef','#f2c94c','#e8c96a','#ffd166'];
   const now = performance.now();
   confettiParticles = Array.from({length:130}, () => ({
     born: now,
@@ -1686,7 +1726,7 @@ function animateConfetti(){
     confettiCtx.translate(x, y); confettiCtx.rotate(rotation);
     confettiCtx.globalAlpha = alpha;
     confettiCtx.fillStyle = p.color;
-    confettiCtx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.55);
+    drawConfettiHeart(confettiCtx, p.size);
     confettiCtx.restore();
 
     alive.push(p);
